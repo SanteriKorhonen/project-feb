@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MenuScreen from './screens/MenuScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import Profile from './screens/profile';
-import Locations from './screens/Locations';
+import LocationsStack from './screens/Loca.js';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,7 +15,7 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen name="Welcome" component={WelcomeScreen} />
         <Tab.Screen name="Menu" component={MenuScreen} />
-        <Tab.Screen name="Locations" component={Locations} />
+        <Tab.Screen name="Locations" component={LocationsStack} />
         <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
     </NavigationContainer>
