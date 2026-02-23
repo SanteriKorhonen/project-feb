@@ -1,4 +1,3 @@
-// screens/addlocation.js
 import React, { useState } from 'react';
 import {
   View,
@@ -14,6 +13,15 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = '@myapp_locations';
+const COLORS = {
+  primary: '#1E3A8A',
+  secondary: '#3B82F6',
+  background: '#F1F5F9',
+  card: '#FFFFFF',
+  textPrimary: '#0F172A',
+  textSecondary: '#475569',
+  border: '#CBD5E1',
+};
 
 export default function AddLocation({ navigation }) {
   const [name, setName] = useState('');
@@ -25,7 +33,6 @@ export default function AddLocation({ navigation }) {
       Alert.alert('Validation', 'Please enter a location name.');
       return;
     }
-
     const newItem = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -33,14 +40,11 @@ export default function AddLocation({ navigation }) {
       rating: Number(rating),
       createdAt: new Date().toISOString(),
     };
-
     try {
       const json = await AsyncStorage.getItem(STORAGE_KEY);
       const existing = json ? JSON.parse(json) : [];
       const updated = [newItem, ...existing];
-
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      // go back to the list — list screen listens to focus and reloads
       navigation.goBack();
     } catch (e) {
       console.error('Error saving location', e);
@@ -84,7 +88,11 @@ export default function AddLocation({ navigation }) {
                 rating === r ? styles.ratingButtonActive : null,
               ]}
             >
-              <Text style={rating === r ? styles.ratingTextActive : styles.ratingText}>{r}</Text>
+              <Text
+                style={rating === r ? styles.ratingTextActive : styles.ratingText}
+              >
+                {r}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -98,68 +106,17 @@ export default function AddLocation({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  container: {
-    padding: 20,
-    paddingTop: 36,
-  },
-  heading: {
-    fontSize: 26,
-    fontWeight: '700',
-    marginBottom: 20,
-  },
-  label: {
-    marginTop: 12,
-    marginBottom: 6,
-    fontWeight: '600',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: '#fff',
-  },
-  textArea: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  ratingRow: {
-    flexDirection: 'row',
-    marginTop: 8,
-  },
-  ratingButton: {
-    padding: 10,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: '#888',
-    borderRadius: 6,
-    minWidth: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ratingButtonActive: {
-    backgroundColor: '#222',
-    borderColor: '#222',
-  },
-  ratingText: {
-    color: '#222',
-    fontWeight: '600',
-  },
-  ratingTextActive: {
-    color: '#fff',
-    fontWeight: '700',
-  },
-  saveButton: {
-    marginTop: 24,
-    backgroundColor: '#e53935',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  saveText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 16,
-  },
+  flex: { flex: 1, backgroundColor: COLORS.background },
+  container: { padding: 20, paddingTop: 36 },
+  heading: { fontSize: 26, fontWeight: '800', marginBottom: 20, color: COLORS.primary },
+  label: { marginTop: 14, marginBottom: 6, fontWeight: '600', color: COLORS.textSecondary },
+  input: { borderWidth: 1, borderColor: COLORS.border, borderRadius: 12, padding: 14, backgroundColor: COLORS.card },
+  textArea: { minHeight: 90, textAlignVertical: 'top' },
+  ratingRow: { flexDirection: 'row', marginTop: 8 },
+  ratingButton: { padding: 10, marginRight: 10, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, minWidth: 42, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.card },
+  ratingButtonActive: { backgroundColor: COLORS.secondary, borderColor: COLORS.secondary },
+  ratingText: { color: COLORS.textPrimary, fontWeight: '600' },
+  ratingTextActive: { color: '#fff', fontWeight: '700' },
+  saveButton: { marginTop: 28, backgroundColor: COLORS.secondary, paddingVertical: 16, borderRadius: 12, alignItems: 'center', elevation: 3 },
+  saveText: { color: '#fff', fontWeight: '700', fontSize: 16 },
 });
