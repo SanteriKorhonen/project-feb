@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -8,92 +9,121 @@ import {
   Alert,
 } from 'react-native';
 
-const COLORS = {
-  primary: '#1E3A8A',
-  secondary: '#3B82F6',
-  background: '#F1F5F9',
-  card: '#FFFFFF',
-  textPrimary: '#0F172A',
-};
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function LoginScreen({ navigation }) {
+
+const USERNAME = "student";
+const PASSWORD = "1234";
+
+
+export default function LoginScreen({ onLogin }) {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    if (username === 'admin' && password === '1234') {
-      Alert.alert('Success', 'Login successful!');
-      navigation.navigate('Profile', { username });
+
+  const handleLogin = async () => {
+
+    if (username === "Admin" && password === "1234") {
+
+      await AsyncStorage.setItem('user', username);
+
+      onLogin(username);
+
     } else {
-      Alert.alert('Error', 'Invalid username or password');
+
+      Alert.alert(
+        "Login Failed",
+        "Wrong username or password"
+      );
+
     }
+
   };
 
+
   return (
+
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Login</Text>
 
-        <TextInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          style={styles.input}
-        />
+      <Text style={styles.title}>
+        Login
+      </Text>
 
-        <TextInput
-          placeholder="Password"
-          value={password}
-          secureTextEntry
-          onChangeText={setPassword}
-          style={styles.input}
-        />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-      </View>
+      <TextInput
+        placeholder="Username"
+        style={styles.input}
+        value={username}
+        onChangeText={setUsername}
+      />
+
+
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        style={styles.input}
+        value={password}
+        onChangeText={setPassword}
+      />
+
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleLogin}
+      >
+
+        <Text style={styles.buttonText}>
+          Login
+        </Text>
+
+      </TouchableOpacity>
+
     </View>
+
   );
+
 }
 
+
+
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#F4F6FA',
     justifyContent: 'center',
     padding: 20,
   },
-  card: {
-    backgroundColor: COLORS.card,
-    padding: 25,
-    borderRadius: 16,
-    elevation: 4,
-  },
+
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#3B82F6',
     marginBottom: 20,
-    color: COLORS.primary,
     textAlign: 'center',
   },
+
   input: {
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 15,
     backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
+
   button: {
-    backgroundColor: COLORS.secondary,
+    backgroundColor: '#3B82F6',
     padding: 14,
-    borderRadius: 10,
+    borderRadius: 8,
     alignItems: 'center',
   },
+
   buttonText: {
     color: '#fff',
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontSize: 16,
   },
+
 });

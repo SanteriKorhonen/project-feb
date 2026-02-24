@@ -1,89 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const LOGIN_KEY = '@myapp_user';
-
-export default function Profile() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      const user = await AsyncStorage.getItem(LOGIN_KEY);
-      if (user) {
-        setLoggedIn(true);
-        setCurrentUser(user);
-      }
-    };
-    checkLogin();
-  }, []);
-
-  const handleLogin = async () => {
-    if (username === 'Admin' && password === '1234') {
-      await AsyncStorage.setItem(LOGIN_KEY, username);
-      setLoggedIn(true);
-      setCurrentUser(username);
-      Alert.alert('Success', 'Logged in successfully');
-    } else {
-      Alert.alert('Error', 'Wrong username or password');
-    }
-  };
-
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem(LOGIN_KEY);
-    setLoggedIn(false);
-    setCurrentUser(null);
-    setUsername('');
-    setPassword('');
-  };
+export default function Profile({ username, onLogout }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Profile</Text>
 
-        {!loggedIn ? (
-          <>
-            <TextInput
-              placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Password"
-              value={password}
-              secureTextEntry
-              onChangeText={setPassword}
-              style={styles.input}
-            />
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginText}>Login</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            <Text style={styles.label}>Logged in as:</Text>
-            <Text style={styles.username}>{currentUser}</Text>
-            <TouchableOpacity
-              style={styles.logoutButton}
-              onPress={handleLogout}
-            >
-              <Text style={styles.logoutText}>Logout</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
+      <Text style={styles.title}>Profile</Text>
+
+      <Text style={styles.info}>Logged in as:</Text>
+      <Text style={styles.username}>{username}</Text>
+
+      <TouchableOpacity style={styles.button} onPress={onLogout}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
